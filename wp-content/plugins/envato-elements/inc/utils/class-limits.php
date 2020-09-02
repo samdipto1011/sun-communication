@@ -38,4 +38,15 @@ class Limits extends Base {
 		@ set_time_limit( 0 );
 	}
 
+	public function get_current_ini_bytes( $ini_setting ) {
+		return wp_convert_hr_to_bytes( ini_get( $ini_setting ) );
+	}
+
+	public function get_max_execution_time() {
+		return ini_get( 'max_execution_time' );
+	}
+
+	public function get_max_input_vars() {
+		return ini_get( 'max_input_vars' );
+	}
 }

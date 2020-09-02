@@ -6,6 +6,11 @@
 
 .iconWithLabel {
   margin-right: 4px;
+
+  [dir='rtl'] & {
+    margin-right: 0;
+    margin-left: 4px;
+  }
 }
 
 @keyframes iconSpin {

@@ -98,6 +98,11 @@ $leftRightGutter: 80px;
   padding-right: 6px;
   display: flex;
 
+  [dir='rtl'] & {
+    margin-left: 0;
+    margin-right: 12px;
+  }
+
   &::before {
     content: '';
     display: inline-block;
@@ -106,6 +111,11 @@ $leftRightGutter: 80px;
     margin-right: 10px;
     height: 20px;
     opacity: 0.3;
+
+    [dir='rtl'] & {
+      margin-right: 0;
+      margin-left: 10px;
+    }
   }
 }
 

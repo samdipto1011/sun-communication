@@ -10,6 +10,12 @@
   position: absolute;
   right: 0;
   bottom: 0;
+
+  [dir='rtl'] & {
+    background-position: left bottom;
+    right: unset;
+    left: 0;
+  }
 }
 
 .successIcon {

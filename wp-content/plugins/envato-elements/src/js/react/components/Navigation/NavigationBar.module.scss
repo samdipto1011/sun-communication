@@ -30,6 +30,15 @@
     overflow: hidden;
     margin-right: 20px;
   }
+
+  [dir='rtl'] & {
+    padding: 0 20px 0 10px;
+
+    @media screen and (max-width: 1000px) {
+      margin-right: 0;
+      margin-left: 20px;
+    }
+  }
 }
 
 .logoLink {
@@ -42,6 +51,12 @@
   overflow: hidden;
   cursor: pointer;
   text-indent: -9999px;
+
+  [dir='rtl'] & {
+    @media screen and (max-width: 1000px) {
+      background-position: 117px center;
+    }
+  }
 }
 
 .menu {
@@ -227,6 +242,11 @@
     .menuItem {
       border-right: 0;
       margin-left: 10px;
+
+      [dir='rtl'] & {
+        margin-left: 0;
+        margin-right: 10px;
+      }
     }
   }
 }

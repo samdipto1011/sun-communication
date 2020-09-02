@@ -51,12 +51,6 @@ class Builder_Elementor extends Builder {
 			return new \WP_Error( 'plugin_error', 'Missing required plugin: Elementor' );
 		}
 
-		// We pipe off here to handle a special case for Global Styles.
-		$global_result = $this->ensure_elementor_global_styles_are_imported_and_active( $template_index );
-		if ( true !== $global_result ) {
-			return $global_result;
-		}
-
 		$template_data = $this->get_template_data( $template_index );
 
 		return $this->import_json_file_to_elementor_library( $template_data['source'], $template_index );
@@ -97,8 +91,31 @@ class Builder_Elementor extends Builder {
 		$template_json_file       = $template_kit_folder_name . $json_file_path;
 		$local_json_data          = json_decode( file_get_contents( $template_json_file ), true );
 		$source                   = \Elementor\Plugin::$instance->templates_manager->get_source( 'local' );
-		$result                   = $source->import_template( basename( $template_json_file ), $template_json_file );
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			// Avoid Elementor Pro errors on import.
+			// Hopefully Elementor fixes their import code to handle missing fields better.
+			// This prevents our UI from breaking.
+			// todo: check on wp-content/plugins/elementor-pro/modules/posts/widgets/posts.php:31
+			// and remove this hacky fix once they validate the field exists before importing.
+			ini_set( 'display_errors', false );
+		}
+		// This overwrites the 'template type' so our Elementor Free users can at least import some of the Pro templates.
+		// As Elementor only accepts the path to a JSON file for importing we temporarily modify the JSON data and
+		// send in that template file name to Elementor for processing. We delete the temporary JSON file after processing below.
+		$temp_wp_json_file = false;
+		if ( ! empty( $local_json_data['metadata']['elementor_pro_required'] ) && ! class_exists( '\ElementorPro\Plugin' ) ) {
+			$local_json_data['type'] = 'page';
+			require_once ABSPATH . '/wp-admin/includes/file.php';
+			$temp_wp_json_file = wp_tempnam();
+			file_put_contents( $temp_wp_json_file, json_encode( $local_json_data ) );
+			$template_json_file = $temp_wp_json_file;
+		}
+		$result = $source->import_template( basename( $template_json_file ), $template_json_file );
 
+		// Cleanup above free template type file if it was created.
+		if ( $temp_wp_json_file ) {
+			unlink( $temp_wp_json_file );
+		}
 		if ( is_wp_error( $result ) ) {
 			return new \WP_Error( 'import_error', 'Failed to import template: ' . esc_html( $result->get_error_message() ) );
 		}
@@ -117,6 +134,24 @@ class Builder_Elementor extends Builder {
 			// Record some metadata so we can link back to kit from imported template:
 			update_post_meta( $imported_template_id, 'envato_tk_source_kit', $this->kit_id );
 			update_post_meta( $imported_template_id, 'envato_tk_source_index', $template_index );
+
+			if ( $local_json_data['metadata'] && ! empty( $local_json_data['metadata']['template_type'] ) && 'global-styles' === $local_json_data['metadata']['template_type'] ) {
+				// We set some metadata around the global template so Elementor can interpret them correctly:
+				// From: wp-content/plugins/elementor/core/documents-manager.php:366
+				update_post_meta( $imported_template_id, '_elementor_edit_mode', 'builder' );
+				update_post_meta( $imported_template_id, '_elementor_template_type', 'kit' );
+				// Set the global theme styles to this newly imported template:
+				update_option( 'elementor_active_kit', $imported_template_id );
+
+				// Update the kit styles title so we can display it nicely in the drop down settings UI.
+				wp_update_post(
+					array(
+						'ID'         => $imported_template_id,
+						'post_title' => 'Kit Styles: ' . $this->get_name(),
+					)
+				);
+			}
+
 			return $imported_template_id;
 		}
 
@@ -130,83 +165,6 @@ class Builder_Elementor extends Builder {
 	 */
 	public function get_import_button_text() {
 		return esc_html__( 'Import into Elementor Library', 'template-kit-import' );
-	}
-
-
-	/**
-	 * Ensure our global styles (if they exist) are installed and active on the site.
-	 * But only installed + active once!
-	 *
-	 * @param $template_index_user_requested_to_import
-	 *
-	 * @return bool|\WP_Error
-	 */
-	public function ensure_elementor_global_styles_are_imported_and_active( $template_index_user_requested_to_import ) {
-		$templates = $this->get_available_templates();
-		foreach ( $templates as $template_index => $template ) {
-			// Global styles are tagged with a metadata of 'global-styles` in the JSON
-			if ( ! empty( $template['metadata'] ) && ! empty( $template['metadata']['template_type'] ) && 'global-styles' === $template['metadata']['template_type'] ) {
-				// We have found some global styles!
-				// First we check if we've previously imported these global styles, looking at the 'envato_tk_source_index' and 'envato_tk_source_kit' post meta.
-				$existing_global_styles_query = array(
-					'meta_query'     => array(
-						array(
-							'key'   => 'envato_tk_source_kit',
-							'value' => $this->kit_id,
-						),
-						array(
-							'key'   => 'envato_tk_source_index',
-							'value' => $template_index,
-						),
-					),
-					'post_type'      => 'elementor_library',
-					'post_status'    => 'publish',
-					'posts_per_page' => -1,
-				);
-				$existing_global_styles       = get_posts( $existing_global_styles_query );
-				if ( ! $existing_global_styles ) {
-					// We haven't imported these global styles before! Lets do it...
-
-					$imported_global_styles_id = $this->import_json_file_to_elementor_library( $template['source'], $template_index );
-
-					if ( is_wp_error( $imported_global_styles_id ) ) {
-						// Failed to import global styles:
-						return $imported_global_styles_id;
-					} else {
-						// We set some metadata around the global styles so Elementor can interpret them correctly:
-						// From: wp-content/plugins/elementor/core/documents-manager.php:366
-						update_post_meta( $imported_global_styles_id, '_elementor_edit_mode', 'builder' );
-						update_post_meta( $imported_global_styles_id, '_elementor_template_type', 'kit' );
-
-						wp_update_post(
-							array(
-								'ID'         => $imported_global_styles_id,
-								'post_title' => 'Global Styles For Kit: ' . $this->get_name(),
-							)
-						);
-					}
-				} else {
-					// We have imported this kit before, lets make sure it's still the default.
-					// From: wp-content/plugins/elementor/core/kits/manager.php:17
-					$imported_global_styles    = current( $existing_global_styles );
-					$imported_global_styles_id = $imported_global_styles->ID;
-				}
-
-				if ( $imported_global_styles_id ) {
-					// And now actually set this kit as active:
-					// From: wp-content/plugins/elementor/core/kits/manager.php:17
-					update_option( 'elementor_active_kit', $imported_global_styles_id );
-
-					// Special case here if the user has clicked on "Import Global Styles" on its own
-					// we return early because we don't want the parent caller to run the import a second time around.
-					if ( $template_index_user_requested_to_import === $template_index ) {
-						return $imported_global_styles_id;
-					}
-				}
-			}
-		}
-
-		return true;
 	}
 
 	/**

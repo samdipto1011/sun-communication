@@ -27,4 +27,9 @@
   &:focus {
     outline: 0;
   }
+
+  [dir='rtl'] & {
+    right: unset;
+    left: 5px;
+  }
 }

@@ -45,6 +45,7 @@ const TemplateItemCardWrapper = ({ template }) => {
                   onCloseCallback={() => {
                     setOpenActivationModal(false)
                   }}
+                  installRequirements={blockImport}
                 />
               ) : null}
               <Button

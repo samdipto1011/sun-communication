@@ -22,6 +22,11 @@
   color: #919191;
   border: 0;
   background: transparent;
+
+  [dir='rtl'] & {
+    right: unset;
+    left: 10px;
+  }
 }
 
 .dismissIcon {

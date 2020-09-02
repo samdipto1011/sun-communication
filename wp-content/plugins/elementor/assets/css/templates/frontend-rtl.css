@@ -259,12 +259,6 @@
   font-size: 13px;
   color: inherit; }
 
-#wpadminbar #wp-admin-bar-elementor_app_site_editor a.ab-item:hover {
-  background: #4ab7f4;
-  color: #ffffff; }
-  #wpadminbar #wp-admin-bar-elementor_app_site_editor a.ab-item:hover:before {
-    color: #ffffff; }
-
 .elementor-hidden {
   display: none; }
 
@@ -1046,7 +1040,7 @@ ul.elementor-icon-list-items.elementor-inline-items {
 .elementor-form-fields-wrapper {
   display: flex;
   flex-wrap: wrap; }
-  .elementor-form-fields-wrapper.elementor-labels-above > .elementor-field-group > input, .elementor-form-fields-wrapper.elementor-labels-above > .elementor-field-group > textarea, .elementor-form-fields-wrapper.elementor-labels-above > .elementor-field-group > .elementor-select-wrapper, .elementor-form-fields-wrapper.elementor-labels-above > .elementor-field-group .elementor-field-subgroup {
+  .elementor-form-fields-wrapper.elementor-labels-above .elementor-field-group > input, .elementor-form-fields-wrapper.elementor-labels-above .elementor-field-group > textarea, .elementor-form-fields-wrapper.elementor-labels-above .elementor-field-group > .elementor-select-wrapper, .elementor-form-fields-wrapper.elementor-labels-above .elementor-field-group .elementor-field-subgroup {
     flex-basis: 100%;
     max-width: 100%; }
   .elementor-form-fields-wrapper.elementor-labels-inline > .elementor-field-group > input, .elementor-form-fields-wrapper.elementor-labels-inline > .elementor-field-group .elementor-select-wrapper {

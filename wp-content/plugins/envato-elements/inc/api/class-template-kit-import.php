@@ -110,7 +110,7 @@ class Template_Kit_Import extends API {
 
 		$templates_grouped = [];
 		foreach ( $all_template_data['templates'] as $template_id => $template ) {
-			$template_group = ! empty( $template['metadata'] ) && ! empty( $template['metadata']['template_type'] ) && $template['metadata']['template_type'] !== 'global-styles' ? $template['metadata']['template_type'] : false;
+			$template_group = ! empty( $template['metadata'] ) && ! empty( $template['metadata']['template_type'] ) ? $template['metadata']['template_type'] : false;
 			if ( $template_group ) {
 				if ( ! isset( $templates_grouped[ $template_group ] ) ) {
 					$templates_grouped[ $template_group ] = [
@@ -174,7 +174,7 @@ class Template_Kit_Import extends API {
 				);
 			}
 
-			if ( $request->get_param( 'insertToPage' ) ) {
+			if ( $request->get_param( 'insertToPage' ) === 'true' ) {
 				// we have to return additional JSON data so Elementor can insert these widgets on the page.
 				\Elementor\Plugin::$instance->editor->set_edit_mode( true );
 				$db      = \Elementor\Plugin::$instance->db;
@@ -282,7 +282,7 @@ class Template_Kit_Import extends API {
 				);
 			}
 
-			if ( $request->get_param( 'insertToPage' ) ) {
+			if ( $request->get_param( 'insertToPage' ) === 'true' ) {
 				// we have to return additional JSON data so Elementor can insert these widgets on the page.
 				\Elementor\Plugin::$instance->editor->set_edit_mode( true );
 				$db      = \Elementor\Plugin::$instance->db;

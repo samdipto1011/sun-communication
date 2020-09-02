@@ -13,6 +13,11 @@
 
 .buttonWrapper {
   margin-left: 10px;
+
+  [dir='rtl'] & {
+    margin-left: 0;
+    margin-right: 10px;
+  }
 }
 
 .instructions {

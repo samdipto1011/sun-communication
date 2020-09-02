@@ -58,6 +58,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  [dir='rtl'] & {
+    font-weight: 500;
+  }
 }
 
 .cardDescription {

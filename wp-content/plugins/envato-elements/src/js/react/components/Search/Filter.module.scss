@@ -76,26 +76,35 @@
   z-index: 8;
   line-height: 30px;
 
+  [dir='rtl'] & {
+    right: unset;
+    left: -1px;
+  }
+
 
   &::after,
   &::before {
     content: '';
     display: block;
     position: absolute;
+    right: 40px;
     bottom: 100%;
     width: 0;
     height: 0;
     border-style: solid;
+
+    [dir='rtl'] & {
+      right: unset;
+      left: 40px;
+    }
   }
 
   &::after {
-    right: 40px;
     border-color: transparent transparent #fff;
     border-width: 10px;
   }
 
   &::before {
-    right: 40px;
     border-color: transparent transparent #e2e2e2;
     border-width: 11px;
   }

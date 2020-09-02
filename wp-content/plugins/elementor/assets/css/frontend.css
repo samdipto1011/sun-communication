@@ -1,4 +1,4 @@
-/*! elementor - v3.0.0 - 23-08-2020 */
+/*! elementor - v3.0.5 - 31-08-2020 */
 .dialog-widget-content {
   background-color: #fff;
   position: absolute;
@@ -299,12 +299,6 @@
   top: 4px;
   font-size: 13px;
   color: inherit; }
-
-#wpadminbar #wp-admin-bar-elementor_app_site_editor a.ab-item:hover {
-  background: #4ab7f4;
-  color: #ffffff; }
-  #wpadminbar #wp-admin-bar-elementor_app_site_editor a.ab-item:hover:before {
-    color: #ffffff; }
 
 .elementor-hidden {
   display: none; }
@@ -1206,7 +1200,7 @@ ul.elementor-icon-list-items.elementor-inline-items {
   display: flex;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap; }
-  .elementor-form-fields-wrapper.elementor-labels-above > .elementor-field-group > input, .elementor-form-fields-wrapper.elementor-labels-above > .elementor-field-group > textarea, .elementor-form-fields-wrapper.elementor-labels-above > .elementor-field-group > .elementor-select-wrapper, .elementor-form-fields-wrapper.elementor-labels-above > .elementor-field-group .elementor-field-subgroup {
+  .elementor-form-fields-wrapper.elementor-labels-above .elementor-field-group > input, .elementor-form-fields-wrapper.elementor-labels-above .elementor-field-group > textarea, .elementor-form-fields-wrapper.elementor-labels-above .elementor-field-group > .elementor-select-wrapper, .elementor-form-fields-wrapper.elementor-labels-above .elementor-field-group .elementor-field-subgroup {
     -ms-flex-preferred-size: 100%;
         flex-basis: 100%;
     max-width: 100%; }

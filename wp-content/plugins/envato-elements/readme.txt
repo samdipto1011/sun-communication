@@ -4,7 +4,7 @@ Tags: elementor, elements, templates, template kit
 Requires at least: 4.6
 Tested up to: 5.5
 Requires PHP: 5.6
-Stable tag: 2.0.5
+Stable tag: 2.0.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -78,6 +78,14 @@ If you have any questions or feedback for the team, please send an email to exte
 
 
 == Changelog ==
+
+= 2.0.6 - 2020-08-28 =
+* Fix: Better support for RTL text direction
+* Fix: Better handling of Global Kit Site Styles
+* Fix: Better support for WP_DEBUG
+* Fix: Better compatibility with Elementor Pro
+* Fix: Better visibility of the required plugin notice
+* Feature: Display server settings on settings page for user troubleshooting
 
 = 2.0.5 - 2020-06-08 =
 * Fix: Better support for styles on free template kits and free blocks
